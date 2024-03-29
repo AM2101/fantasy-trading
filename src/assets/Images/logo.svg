@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="122" height="42" viewBox="0 0 122 42">
+  <g id="Group_1506" data-name="Group 1506" transform="translate(-40 -101)">
+    <g id="Group_61" data-name="Group 61" transform="translate(19.839 -923.161)">
+      <circle id="Ellipse_7" data-name="Ellipse 7" cx="21" cy="21" r="21" transform="translate(20.161 1024.161)" fill="#503380"/>
+      <g id="Group_54" data-name="Group 54" transform="translate(25.903 1029.903)">
+        <path id="Path_1" data-name="Path 1" d="M273.179,353.7H250.072v2.621h24.21a15.316,15.316,0,0,0-1.1-2.621m-23.107,6.562v12.595a15.305,15.305,0,0,0,2.722,1.752V362.774h7.242V360.26Z" transform="translate(-244.336 -345.585)" fill="#fff"/>
+        <rect id="Rectangle_3" data-name="Rectangle 3" width="2.723" height="10.921" transform="translate(17.387 11.613)" fill="#fff"/>
+        <path id="Path_2" data-name="Path 2" d="M440.213,520.555a13.63,13.63,0,0,1-18.867,15.785v1.839a15.323,15.323,0,0,0,20.6-17.624Z" transform="translate(-411.681 -508.614)" fill="#fff"/>
+        <path id="Path_3" data-name="Path 3" d="M1.689,15.324A13.562,13.562,0,0,1,4.53,7.009v-.1H4.61a13.611,13.611,0,0,1,21.43,0h2.082A15.317,15.317,0,1,0,4.53,26.188V23.639a13.559,13.559,0,0,1-2.84-8.315" transform="translate(0 0)" fill="#fff"/>
+        <path id="Path_4" data-name="Path 4" d="M197.468,301.094v.1l.081-.1Z" transform="translate(-192.938 -294.187)" fill="#fff"/>
+      </g>
+    </g>
+    <text id="FANTASY_TRADING" data-name="FANTASY 
+TRADING" transform="translate(87 118)" fill="#503380" font-size="18" font-family="FranklinGothic-MediumItalic, Franklin Gothic" font-weight="500" font-style="italic"><tspan x="0" y="0">FANTASY </tspan><tspan x="0" y="20">TRADING</tspan></text>
+  </g>
+</svg>

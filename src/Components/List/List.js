@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "./List.css"
-import axios from 'axios';
+// import axios from 'axios';
+import Man from '../../assets/Images/Ellipse9.png'
+import cryptoList from '../../List.json'
 
 const List = () => {
   const [cryptoData, setCryptoData] = useState([]);
@@ -10,24 +12,29 @@ const List = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const options = {
-          method: 'GET',
-          url: 'https://investing-cryptocurrency-markets.p.rapidapi.com/coins/list',
-          params: {
-            edition_currency_id: '12',
-            time_utc_offset: '28800',
-            lang_ID: '1',
-            sort: 'PERC1D_DN',
-            page: '1'
-          },
-          headers: {
-            'X-RapidAPI-Key': 'fef87bc577mshe009dba416d1ca1p191f14jsnd4ad23e4a8d4',
-            'X-RapidAPI-Host': 'investing-cryptocurrency-markets.p.rapidapi.com'
-          }
-        };
+        // const options = {
+        //   method: 'GET',
+        //   url: 'https://investing-cryptocurrency-markets.p.rapidapi.com/coins/list',
+        //   params: {
+        //     edition_currency_id: '12',
+        //     time_utc_offset: '28800',
+        //     lang_ID: '1',
+        //     sort: 'PERC1D_DN',
+        //     page: '1'
+        //   },
+        //   headers: {
+        //     'X-RapidAPI-Key': 'fbf36406a3msh9191e1526f0bc2fp16ee1bjsna0c14825d0c9',
+        //     'X-RapidAPI-Host': 'investing-cryptocurrency-markets.p.rapidapi.com'
+        //   }
+        // };
 
-        const response = await axios.request(options);
-        const data = response.data.data[0].screen_data.crypto_data;
+
+        // const response= await fetch(cryptoList);
+        // console.log(response);
+        const data = cryptoList.data[0].screen_data.crypto_data;
+        // const data = response.data.data[0].screen_data.crypto_data;
+        // const data = response.data[0].screen_data.crypto_data;
+        
         // console.log(data)
         setCryptoData(data);
         setLoading(false);
@@ -45,7 +52,7 @@ const List = () => {
   };
 
   const filteredCryptoData = cryptoData.filter((cryptoItem) =>
-    cryptoItem.name.toLowerCase().includes(searchTerm.toLowerCase())
+    cryptoItem.cross_rates_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -76,26 +83,30 @@ const List = () => {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <div style={{height:"75vh", overflowY: "scroll"}}>
+          <div style={{height:"72vh", overflowY: "scroll"}}>
           <ul className="list-group m-2" style={{overflowX:'hidden'}}>
           {filteredCryptoData.map((cryptoItem, index) => (
 
             // {cryptoData.map((cryptoItem, index) => (
-              <li key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{width:"95%",height:"100px"}}>
+              <li key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{width:"100%",height:"100px"}}>
                 <div className='col-4 d-flex'>
-                  <div className=' rounded-circle' style={{height:"40px", width:"40px", border:"1px solid black"}}>
+                  <div className=' rounded-circle' style={{height:"45px", width:"45px", border:"1px solid black"}}>
                 <img
-                  src={cryptoItem.logo_url}
-                  alt={cryptoItem.name}
-                  width="30"
-                  height="30"
+                  src={Man}
+                  alt="Man"
+                  width="35"
+                  height="35"
                   className="rounded-circle m-1"
                 />
+                {/* <img src={man} alt="Logo" /> */}
                 </div>
-                <span className='m-2 d-none d-lg-block'>{cryptoItem.cross_rates_name}</span>
+                <div className='d-flex mx-auto   flex-column'>
+                  <span className=' d-none d-lg-block text-bold fw-bold'>SA</span>
+                  <span className='d-none d-lg-block text-bold'>Saif Ali</span>
+                </div>
                 </div>
                 <div className='col-6 d-flex justify-content-between align-items-center'>
-                <span className=''>{cryptoItem.pair_change_percent_numeric}</span>
+                <span className=''>{cryptoItem.circulating_supply}</span>
                 <span className='' style={{color:cryptoItem.change_percent_1d_color}}>{cryptoItem.change_percent_1d}</span>
                 <span className=''>{cryptoItem.country_id}</span>
                 </div>
