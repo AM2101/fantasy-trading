@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+// import Home from "../Layout/Home"
 import routes from '../routes';
 
 const AppContent = () => {
@@ -15,7 +16,6 @@ const AppContent = () => {
             />
           )
         ))}
-        <Route path="/" element={<Navigate to="Dashboard" replace />} />
       </Routes>
     </Suspense>
   );

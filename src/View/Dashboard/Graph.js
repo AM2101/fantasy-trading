@@ -1,93 +1,93 @@
 //HighChart Graph
-import React, { useEffect } from 'react';
-import Highcharts from 'highcharts/highstock';
+// import React, { useEffect } from 'react';
+// import Highcharts from 'highcharts/highstock';
 
-function Graph() {
-  useEffect(() => {
-    const options = {
-      title: {
-        text: 'Dynamic data in Highcharts Stock'
-      },
+// function Graph() {
+//   useEffect(() => {
+//     const options = {
+//       title: {
+//         text: 'Dynamic data in Highcharts Stock'
+//       },
 
-      xAxis: {
-        overscroll: 500000,
-        range: 4 * 200000,
-        gridLineWidth: 1
-      },
+//       xAxis: {
+//         overscroll: 500000,
+//         range: 4 * 200000,
+//         gridLineWidth: 1
+//       },
 
-      rangeSelector: {
-        buttons: [{
-          type: 'minute',
-          count: 15,
-          text: '15m'
-        }, {
-          type: 'hour',
-          count: 1,
-          text: '1h'
-        }, {
-          type: 'all',
-          count: 1,
-          text: 'All'
-        }],
-        selected: 1,
-        inputEnabled: false
-      },
+//       rangeSelector: {
+//         buttons: [{
+//           type: 'minute',
+//           count: 15,
+//           text: '15m'
+//         }, {
+//           type: 'hour',
+//           count: 1,
+//           text: '1h'
+//         }, {
+//           type: 'all',
+//           count: 1,
+//           text: 'All'
+//         }],
+//         selected: 1,
+//         inputEnabled: false
+//       },
 
-      navigator: {
-        series: {
-          color: '#000000'
-        }
-      },
+//       navigator: {
+//         series: {
+//           color: '#000000'
+//         }
+//       },
 
-      series: [{
-        type: 'candlestick',
-        color: '#FF7F7F',
-        upColor: '#90EE90',
-        lastPrice: {
-          enabled: true,
-          label: {
-            enabled: true,
-            backgroundColor: '#FF7F7F'
-          }
-        },
-        data: [] // Initialize with an empty array
-      }]
-    };
+//       series: [{
+//         type: 'candlestick',
+//         color: '#FF7F7F',
+//         upColor: '#90EE90',
+//         lastPrice: {
+//           enabled: true,
+//           label: {
+//             enabled: true,
+//             backgroundColor: '#FF7F7F'
+//           }
+//         },
+//         data: [] // Initialize with an empty array
+//       }]
+//     };
 
-    // Function to generate dummy data
-    function generateDummyData(count) {
-      const data = [];
-      let baseTime = new Date().getTime();
+//     // Function to generate dummy data
+//     function generateDummyData(count) {
+//       const data = [];
+//       let baseTime = new Date().getTime();
 
-      for (let i = 0; i < count; i++) {
-        const open = Math.random() * 100 + 300;
-        const close = Math.random() * 100 + 300;
-        const high = Math.max(open, close) + Math.random() * 10;
-        const low = Math.min(open, close) - Math.random() * 10;
+//       for (let i = 0; i < count; i++) {
+//         const open = Math.random() * 100 + 300;
+//         const close = Math.random() * 100 + 300;
+//         const high = Math.max(open, close) + Math.random() * 10;
+//         const low = Math.min(open, close) - Math.random() * 10;
 
-        data.push([
-          baseTime + i * 60000, // Increment by 1 minute
-          open,
-          high,
-          low,
-          close
-        ]);
-      }
+//         data.push([
+//           baseTime + i * 60000, // Increment by 1 minute
+//           open,
+//           high,
+//           low,
+//           close
+//         ]);
+//       }
 
-      return data;
-    }
+//       return data;
+//     }
 
-    // Apply the data to the options
-    options.series[0].data = generateDummyData(100); // Generate dummy data
+//     // Apply the data to the options
+//     options.series[0].data = generateDummyData(100); // Generate dummy data
 
-    // Create the chart
-    Highcharts.stockChart('container', options);
-  }, []); // Empty dependency array to run the effect only once on mount
+//     // Create the chart
+//     Highcharts.stockChart('container', options);
+//   }, []); // Empty dependency array to run the effect only once on mount
 
-  return <div id="container" className='container-fluid' style={{  height:"100%", width: '100%' }}></div>;
-}
+//   return <div id="container" className='container-fluid' style={{  height:"100%", width: '100%' }}></div>;
+// }
 
-export default Graph;
+// export default Graph;
 
 
 
@@ -126,10 +126,113 @@ export default Graph;
 //   return (
 //     <div className="tradingview-widget-container" ref={container} style={{ height: "100%", width: "100%" }}>
 //       <div className="tradingview-widget-container__widget" style={{ height: "calc(100% - 32px)", width: "100%" }}></div>
-//       {/* <div className="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span className="blue-text">Track all markets on TradingView</span></a></div> */}
+//       <div className="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span className="blue-text">Track all markets on TradingView</span></a></div>
 //     </div>
 //   );
 // }
 
 // export default memo(Graph);
 
+
+import React, { useEffect, useRef, memo } from 'react';
+
+function Graph() {
+  const container = useRef();
+  const scriptId = 'tradingview-widget-script';
+
+  useEffect(() => {
+    // Check if the script already exists in the DOM
+    const existingScript = document.getElementById(scriptId);
+
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+      script.type = 'text/javascript';
+      script.async = true;
+      script.innerHTML = `
+        {
+          "autosize": true,
+          "symbol": "NASDAQ:AAPL",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "light",
+          "style": "1",
+          "locale": "en",
+          "enable_publishing": false,
+          "allow_symbol_change": true,
+          "calendar": false,
+          "support_host": "https://www.tradingview.com"
+        }`;
+
+      container.current.appendChild(script);
+    }
+  }, []);
+
+  return (
+    <div className="tradingview-widget-container" ref={container} style={{ height: '100%', width: '100%' }}>
+      <div className="tradingview-widget-container__widget" style={{ height: 'calc(100% - 32px)', width: '100%' }}></div>
+      {/* <div className="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span className="blue-text">Track all markets on TradingView</span></a></div> */}
+    </div>
+  );
+}
+
+export default memo(Graph);
+
+
+// import React, { useRef, useEffect } from 'react';
+// import { createChart } from 'lightweight-charts';
+// import io from 'socket.io-client';
+
+// function Graph() {
+//   const log = console.log;
+//   const chartRef = useRef(null); // Create a ref for the chart container
+
+//   useEffect(() => {
+//     const chartProperties = {
+//       width: 1500,
+//       height: 600,
+//       timeScale: {
+//         timeVisible: true,
+//         secondsVisible: false,
+//       }
+//     }
+
+//     const chart = createChart(chartRef.current, chartProperties); // Use ref to access the chart container
+//     const candleSeries = chart.addCandlestickSeries();
+
+//     fetch(`http://127.0.0.1:9665/fetchAPI?endpoint=https://demo-live-data.highcharts.com/aapl-ohlcv.json`)
+//       .then(res => res.json())
+//       .then(data => {
+//         const cdata = data.map(d => {
+//           return { time: d[0] / 1000, open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]) }
+//         });
+//         candleSeries.setData(cdata);
+//       })
+//       .catch(err => log(err))
+
+//     //Dynamic Chart
+//     const socket = io.connect('http://127.0.0.1:4000/');
+
+//     socket.on('KLINE', (pl) => {
+//       //log(pl);
+//       candleSeries.update(pl);
+//     });
+
+//     // Cleanup function
+//     return () => {
+//       // Disconnect socket or perform other cleanup tasks if needed
+//     };
+//   }, []); // Empty dependency array to run effect only once
+
+//   return (
+//     <>
+//     <div ref={chartRef} id="tvchart"></div> /* Use ref to assign the chart container */
+//     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+//   <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+//     </>
+    
+//   )
+// }
+
+// export default Graph;

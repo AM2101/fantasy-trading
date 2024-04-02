@@ -1,8 +1,17 @@
-import React from 'react'
-import { Header, Footer, List } from '../Components'
-import AppContent from '../Components/AppContent'
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Header, Footer, List } from '../Components';
+import AppContent from '../Components/AppContent';
 
 const DefaultLayout = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!localStorage.getItem('token')) {
+            navigate('/');
+        }
+    }, [navigate]);
+
     return (
         <div>
             <Header />
@@ -14,9 +23,9 @@ const DefaultLayout = () => {
                     <AppContent />
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
-    )
-}
+    );
+};
 
-export default DefaultLayout
+export default DefaultLayout;

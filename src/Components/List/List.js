@@ -8,6 +8,8 @@ const List = () => {
   const [cryptoData, setCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +36,7 @@ const List = () => {
         const data = cryptoList.data[0].screen_data.crypto_data;
         // const data = response.data.data[0].screen_data.crypto_data;
         // const data = response.data[0].screen_data.crypto_data;
-        
+
         // console.log(data)
         setCryptoData(data);
         setLoading(false);
@@ -51,69 +53,95 @@ const List = () => {
     setSearchTerm(event.target.value);
   };
 
+  // sort methode 
+  const handleSort = (sortBy) => {
+    setSortBy(sortBy);
+  };
+
+  const sortCryptoData = (cryptoData) => {
+    if (sortBy === 'point') {
+      return cryptoData.sort((a, b) => b.circulating_supply - a.circulating_supply);
+    } else if (sortBy === 'chg') {
+      return cryptoData.sort((a, b) => parseFloat(b.change_percent_1d) - parseFloat(a.change_percent_1d));
+    } else if (sortBy === 'price') {
+      return cryptoData.sort((a, b) => parseFloat(b.country_id) - parseFloat(a.country_id));
+    }
+    return cryptoData;
+  };
+  
+
   const filteredCryptoData = cryptoData.filter((cryptoItem) =>
     cryptoItem.cross_rates_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const sortedCryptoData = sortCryptoData(filteredCryptoData)
+
   return (
     <div className="row shadow-sm">
       <div className="col-md-12 mx-auto">
-        <div className="input-group m-auto" style={{width:"90%"}}>
+
+        <div className="input-group m-auto" style={{ width: "90%" }}>
           <input
             className="form-control border-end-0 border rounded-pill"
             type="search"
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearch}
+            style={{ paddingRight: "60px", backgroundColor: "#f5f3f0" }} // Add padding to accommodate the search icon
           />
-          <span className="input-group-append">
-            <button className="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill" type="button">
-              <i className="fa fa-search"></i>
+          <span className="input-group-append" style={{ position: "absolute", zIndex: "10000", right: "5px", top: 0, bottom: "2px", display: "flex", alignItems: "center" }}>
+            <button className="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill" style={{
+              width: "36px",
+              height: "30px", display: "flex", alignItems: "center"
+            }} type="button">
+              <i className="fa fa-search" style={{ fontSize: "1.2em", marginLeft: "-3px" }}></i>
             </button>
           </span>
         </div>
-        <div className="row" style={{padding:"15px 50px 0 50px "}}>
-            <h6 className='col-6'>Asset</h6>
+
+
+        <div className="row" style={{ padding: "15px 50px 0 50px " }}>
+          <h6 className='col-6'>Asset</h6>
           <div className="col-6 d-flex justify-content-between align-items-center">
-            <h6>Point</h6>
-            <h6>chg%</h6>
-            <h6>Price</h6>
+            <h6 onClick={() => handleSort('Point')}style={{cursor: "pointer"}}>Point</h6>
+            <h6 onClick={() => handleSort('chg')}  style={{cursor: "pointer"}}>chg%</h6>
+            <h6 onClick={() => handleSort('Price')}style={{cursor: "pointer"}}>Price</h6>
           </div>
         </div>
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <div style={{height:"72vh", overflowY: "scroll"}}>
-          <ul className="list-group m-2" style={{overflowX:'hidden'}}>
-          {filteredCryptoData.map((cryptoItem, index) => (
+          <div style={{ height: "72vh", overflowY: "scroll" }}>
+            <ul className="list-group m-2" style={{ overflowX: 'hidden' }}>
+              {sortedCryptoData.map((cryptoItem, index) => (
 
-            // {cryptoData.map((cryptoItem, index) => (
-              <li key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{width:"100%",height:"100px"}}>
-                <div className='col-4 d-flex'>
-                  <div className=' rounded-circle' style={{height:"45px", width:"45px", border:"1px solid black"}}>
-                <img
-                  src={Man}
-                  alt="Man"
-                  width="35"
-                  height="35"
-                  className="rounded-circle m-1"
-                />
-                {/* <img src={man} alt="Logo" /> */}
-                </div>
-                <div className='d-flex mx-auto   flex-column'>
-                  <span className=' d-none d-lg-block text-bold fw-bold'>SA</span>
-                  <span className='d-none d-lg-block text-bold'>Saif Ali</span>
-                </div>
-                </div>
-                <div className='col-6 d-flex justify-content-between align-items-center'>
-                <span className=''>{cryptoItem.circulating_supply}</span>
-                <span className='' style={{color:cryptoItem.change_percent_1d_color}}>{cryptoItem.change_percent_1d}</span>
-                <span className=''>{cryptoItem.country_id}</span>
-                </div>
-              </li>
-            // ))}
-            ))}
-          </ul>
+                // {cryptoData.map((cryptoItem, index) => (
+                <li key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{ width: "95%", height: "80px" }}>
+                  <div className='col-4 d-flex'>
+                    <div className=' rounded-circle' style={{ height: "45px", width: "45px", border: "1px solid black" }}>
+                      <img
+                        src={cryptoItem.image}
+                        alt="Man"
+                        width="35"
+                        height="35"
+                        className="rounded-circle m-1"
+                      />
+                      {/* <img src={man} alt="Logo" /> */}
+                    </div>
+                    <div className='d-flex mx-auto flex-column'>
+                      <span className='mt-2 mt-xl-0 text-bold fw-bold'>SA</span>
+                      <span className='d-none d-xl-block '>{cryptoItem.name}</span>
+                    </div>
+                  </div>
+                  <div className='col-6 d-flex justify-content-between align-items-center'>
+                    <span className=''>{cryptoItem.circulating_supply}</span>
+                    <span className='' style={{ color: cryptoItem.change_percent_1d_color }}>{cryptoItem.change_percent_1d}</span>
+                    <span className=''>{cryptoItem.country_id}</span>
+                  </div>
+                </li>
+                // ))}
+              ))}
+            </ul>
           </div>
         )}
       </div>
