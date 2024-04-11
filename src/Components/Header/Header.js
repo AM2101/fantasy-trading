@@ -3,12 +3,9 @@
   import { Nav, Button, Dropdown } from "react-bootstrap";
   import SignIn from "../Auth/SignIn";
   import SignUp from "../Auth/SignUp";
-  import { Link, useLocation } from "react-router-dom";
+  import { useNavigate, Link, useLocation } from "react-router-dom";
   import Logo from "../../assets/Images/logo.svg"
   import DefaultUserImg from '../../assets/Images/DefaultUserImg.svg'
-  import { useNavigate } from "react-router-dom";
-  // import Details from '../../UserDetails.json'
-
   const Header = () => {
     const userDetailsString = localStorage.getItem('userDetails');
     const userDetails = JSON.parse(userDetailsString);
@@ -18,7 +15,9 @@
     const location = useLocation();
     const navigate = new useNavigate();
 
+
     useEffect(() => {
+      
       // Set the active link based on the current URL pathname
       setActiveLink(location.pathname);
 
@@ -32,8 +31,7 @@
     }, [location.pathname]);
     
     const Logout = () =>{
-      localStorage.removeItem('token')
-      localStorage.removeItem("userDetails")
+      localStorage.clear();
       navigate('/')
     }
 
@@ -48,36 +46,26 @@
       setActiveLink(path);
       closeOffcanvas(); // Close the offcanvas after clicking a nav link
     };
-
-    useEffect(() => {
-      // Set the active link based on the current URL pathname
-      setActiveLink(location.pathname);
-    }, [location.pathname]);
+  
 
 
     const navItem = isLoggedIn ? [ // If user is logged in, show this set of links
-    { name: "Dashboard", path: "/Dashboard" },
+    { name: "Dashboard", path: `/Trade` },
     { name: "Orders", path: "/Orders" },
     { name: "Holding", path: "/Holding" },
     { name: "Positions", path: "/Positions" },
     { name: "Bids", path: "/Bids" },
     { name: "Funds", path: "/Funds" }
   ] : [ // If user is not logged in, show this set of links
-    { name:'Home', path:'/' },
-    { name:'About', path:'/About' },
-    { name:'Contact', path:'/Contact' }
+    { name:'Home', path:'/' }
   ];
 
 
-    const handleSignUp = () => {
-      // Add sign up logic
-    };
-
-    // console.log(Details);  
-    // const handleLogout = () => {
-    //   setIsLoggedIn(false);
-      // Add logout logic
+    // const handleSignUp = () => {
+    //   // Add sign up logic
     // };
+
+
 
     return (
       <>
@@ -147,7 +135,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal2"
                         variant="outline-success"
-                        onClick={handleSignUp}
+                        // onClick={handleSignUp}
                       >
                         Sign Up
                       </Button>

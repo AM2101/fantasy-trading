@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function SignUp() {
 
+  const SignUp = process.env.REACT_APP_AUTH_URL;
   const navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -25,7 +26,7 @@ function SignUp() {
     const register = () => {
         const { name, username, email, password, reEnterPassword } = user;
         if (name && username && email && password && password === reEnterPassword) {
-            axios.post("http://localhost:8081/api/auth/signup", user)
+            axios.post(`${SignUp}/api/auth/signup`, user)
                 .then(res => {
                     // console.log(res);
                     alert("register Successfully");

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 function SignIn() {
 
-
-
+  const SignIn = process.env.REACT_APP_AUTH_URL;
   const navigate = useNavigate();
+
 
   
     const [user, setUser] = useState({
@@ -23,24 +23,11 @@ function SignIn() {
         });
     };
 
-//   const login = () => {
-//     axios.post("http://localhost:8081/api/auth/signin", user)
-//         .then(res => {
-//             console.log(user)
-//             alert(res.data.message);
-//             setLoginUser(res.data.user);
-//             navigate("/", user);
-//         })
-//         .catch(err => {
-//             console.error("Login Error: ", err);
-//             // Handle error
-//         });
-// };
 
 const login = () => {
-  axios.post("http://localhost:8081/api/auth/signin", user)
+  axios.post(`${SignIn}/api/auth/signin`, user)
     .then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       localStorage.removeItem('token')
       const userDetails = res.data;
 
@@ -51,7 +38,7 @@ const login = () => {
       // const userData = res.data;
       // Details.push(userData);
       // setLoginUser(res.data.user);
-      navigate(`/Dashboard`);
+      navigate(`/Trade`);
       navigate(0);
     })
     .catch(err => {

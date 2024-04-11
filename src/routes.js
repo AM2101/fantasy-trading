@@ -1,4 +1,5 @@
 import React from 'react'
+// import { useSearchParams } from 'react-router-dom'
 
 
 const Graph = React.lazy(() => import('./View/Dashboard/Graph'))
@@ -10,7 +11,7 @@ const Holding = React.lazy(()=> import('./View/Holding/Holding'))
 
 const routes = [
     { path: '/', exact: true, name: 'Home' },
-    { path: '/Dashboard', name: 'Dashboard', element: Graph, exact: true },
+    { path: `/Trade/:name?` , name: 'Dashboard', element: Graph, exact: true,  },
     { path: '/Orders', name: 'Orders', element: Orders, exact: true },
     { path: '/Bids', name: 'Bids', element: Bids, exact: true },
     { path: '/Positions', name: 'Positions', element: Positions, exact: true },

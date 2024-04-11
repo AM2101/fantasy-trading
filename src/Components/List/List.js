@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import "./List.css"
 // import axios from 'axios';
-import Man from '../../assets/Images/Ellipse9.png'
+// import Man from '../../assets/Images/Ellipse9.png'
 import cryptoList from '../../List.json'
+import load from '../../assets/Images/giphy.gif'
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const [cryptoData, setCryptoData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState(null);
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -58,6 +61,13 @@ const List = () => {
     setSortBy(sortBy);
   };
 
+  //pass id to link
+ const handleClick = (e) => {
+  navigate(`/Trade/${e}`)
+
+ }
+
+
   const sortCryptoData = (cryptoData) => {
     if (sortBy === 'point') {
       return cryptoData.sort((a, b) => b.circulating_supply - a.circulating_supply);
@@ -77,7 +87,7 @@ const List = () => {
   const sortedCryptoData = sortCryptoData(filteredCryptoData)
 
   return (
-    <div className="row shadow-sm">
+    <div className="row shadow-sm ">
       <div className="col-md-12 mx-auto">
 
         <div className="input-group m-auto" style={{ width: "90%" }}>
@@ -109,18 +119,18 @@ const List = () => {
           </div>
         </div>
         {loading ? (
-          <p>Loading...</p>
+          <img src={load} alt=''/>
         ) : (
           <div style={{ height: "72vh", overflowY: "scroll" }}>
             <ul className="list-group m-2" style={{ overflowX: 'hidden' }}>
               {sortedCryptoData.map((cryptoItem, index) => (
 
                 // {cryptoData.map((cryptoItem, index) => (
-                <li key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{ width: "95%", height: "80px" }}>
+                <li onClick={()=>{handleClick(cryptoItem.name)}} key={index} className="shadow m-auto row list-group-item mb-4 d-flex justify-content-between rounded align-items-center" style={{ width: "95%", height: "80px", cursor:"pointer" }}>
                   <div className='col-4 d-flex'>
                     <div className=' rounded-circle' style={{ height: "45px", width: "45px", border: "1px solid black" }}>
                       <img
-                        src={cryptoItem.image}
+                        src={cryptoItem.image} 
                         alt="Man"
                         width="35"
                         height="35"
