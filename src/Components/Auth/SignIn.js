@@ -23,6 +23,19 @@ function SignIn() {
         });
     };
 
+//   const login = () => {
+//     axios.post("http://localhost:8081/api/auth/signin", user)
+//         .then(res => {
+//             console.log(user)
+//             alert(res.data.message);
+//             setLoginUser(res.data.user);
+//             navigate("/", user);
+//         })
+//         .catch(err => {
+//             console.error("Login Error: ", err);
+//             // Handle error
+//         });
+// };
 
 const login = () => {
   axios.post(`${SignIn}/api/auth/signin`, user)

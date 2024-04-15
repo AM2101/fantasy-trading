@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import "./List.css"
-// import axios from 'axios';
-// import Man from '../../assets/Images/Ellipse9.png'
 import cryptoList from '../../List.json'
 import load from '../../assets/Images/giphy.gif'
 import { useNavigate } from 'react-router-dom';

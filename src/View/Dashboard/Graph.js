@@ -20,8 +20,11 @@ stockTools(Highcharts);
 // let time ;
 
 const Graph = () => {
+  // const [cryptoData, setCryptoData] = useState([]);
   const { name } = useParams();
   const chartComponentRef = useRef(null);
+
+  
   // const [xAxis, setXAxis] = useState(time);
   const [options, setOptions] = useState({
 
@@ -114,146 +117,19 @@ const Graph = () => {
         }
       }
     },
-    rangeSelector: {
 
+    rangeSelector: {
+      dropdown:"always",
       selected: 8,
       allButtonsEnabled: true,
       inputEnabled: false,
-      // buttons: [
-      //   {
-      //     type: 'min',
-      //     count: 0,
-      //     text: '1m',
-      //     events: {
-      //       click: () => {
-      //         const chart = chartComponentRef.current.chart;
-      //         if (chart) {
-      //           const lastPoint = chart.xAxis[0].dataMax;
-      //           const newMin = lastPoint - (1 * 60 * 1000);
-
-
-      //           chart.update({
-      //             xAxis: {
-      //               min: newMin,
-      //               max: lastPoint
-      //             }
-      //           });
-      //         }
-
-      //         time = localStorage.setItem('time',"1min")
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'min',
-      //     count: 1,
-      //     text: '5m',
-      //     events: {
-      //       click: () => {
-      //         const chart = chartComponentRef.current.chart;
-      //         if (chart) {
-      //           const lastPoint = chart.xAxis[0].dataMax;
-      //           const newMin = lastPoint - (5 * 60 * 1000);
-
-      //           chart.update({
-      //             xAxis: {
-      //               min: newMin,
-      //               max: lastPoint
-      //             }
-      //           });
-      //         }
-      //         time = localStorage.setItem('time',"5min");
-      //       }
-
-      //     }
-      //   },
-      //   {
-      //     type: 'hour',
-      //     count: 2,
-      //     text: '1H',
-      //     dataGrouping: {
-      //       forced: true,
-      //       units: [
-      //         [
-      //           'minute',
-      //           [1, 2, 5, 10, 15, 30]
-      //         ],
-      //         ['hour', [1]],
-      //         [
-      //           'day',
-      //           [1]
-      //         ]
-      //       ]
-      //     },
-      //     events:{
-      //       click:()=>{
-      //         time = localStorage.setItem('time',"1hour");
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'day',
-      //     count: 1,
-      //     text: '1D',
-      //     dataGrouping: {
-      //       // forced: true,
-      //       // units: [['day', [1]]]
-      //     },
-      //     events:{
-      //       click:()=>{
-      //         time = localStorage.setItem('time',"3day");
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'month',
-      //     count: 1,
-      //     text: '1mo',
-      //     events: {
-      //       click: function () {
-      //       //   alert('Clicked button');
-      //       time = localStorage.setItem('time',"1 month");
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'month',
-      //     count: 5,
-      //     text: '6mo',
-      //     events:{
-      //       click:()=>{
-      //         time = localStorage.setItem('time',"6 month");
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'year',
-      //     count: 6,
-      //     text: '1y',
-      //     events:{
-      //       click:()=>{
-      //         time = localStorage.setItem('time',"1 year");
-      //       }
-      //     }
-      //   },
-      //   {
-      //     type: 'all',
-      //     count: 7,
-      //     text: 'All',
-      //     events:{
-      //       click:()=>{
-      //         time = localStorage.setItem('time',"all");
-      //       }
-      //     }
-      //   }
-      // ]
+      
       buttons: [
-
         {
           type: 'min',
           count: 1,
           text: '1m',
-          title: 'View 1 min',
+          title: '1 Min',
           events: {
             click: () => {
               const chart = chartComponentRef.current.chart;
@@ -278,7 +154,7 @@ const Graph = () => {
           type: 'min',
           count: 1,
           text: '5m',
-          title: 'View 5 min',
+          title: '5 Min',
           events: {
             click: () => {
               const chart = chartComponentRef.current.chart;
@@ -302,6 +178,7 @@ const Graph = () => {
           type: 'hour',
           count: 1,
           text: '1H',
+          title: '1 Hour',
           dataGrouping: {
             forced: true,
             units: [
@@ -326,6 +203,7 @@ const Graph = () => {
           type: 'day',
           count: 1,
           text: '1D',
+          title: '1 Day',
           dataGrouping: {
             // forced: true,
             // units: [['day', [1]]]
@@ -340,31 +218,32 @@ const Graph = () => {
           type: 'month',
           count: 1,
           text: '1m',
-          title: 'View 1 month'
-        }, {
+          title: '1 Month'
+        }, 
+        {
           type: 'month',
           count: 3,
           text: '3m',
-          title: 'View 3 months'
-        }, {
+          title: '3 Months'
+        },
+        {
           type: 'month',
           count: 6,
           text: '6m',
-          title: 'View 6 months'
-        }, {
+          title: '6 Months'
+        }, 
+        {
           type: 'year',
           count: 1,
           text: '1y',
-          title: 'View 1 year'
-        }, {
+          title: '1 Year'
+        }, 
+        {
           type: 'all',
           text: 'All',
-          title: 'View all'
+          title: 'All'
         }]
     },
-
-
-
 
     yAxis: [
       {
@@ -383,11 +262,12 @@ const Graph = () => {
         top: "80%",
         height: "30%",
         offset: 0
+      },
+      {
+        gridLineWidth: 1
       }
     ],
-    title: {
-      text: "Summary"
-    },
+   
 
     tooltip: {
       formatter: function () {
@@ -445,7 +325,7 @@ const Graph = () => {
       try {
         const response = await fetch(`http://localhost:8081/Stockdata/${name}`);
         const data = await response.json();
-        console.log(data);
+        // console.log(data[0][0].name);
         
         // Update the chart options with new data
         setOptions(prevOptions => ({
@@ -454,6 +334,15 @@ const Graph = () => {
             ...prevOptions.series[0],
             data: data,
           }],
+          title: {
+            text: `${data[0][0].name}`,
+            align:"left",
+            style:{
+              color:'#4d3a92',
+              fontSize: "1.5em",  
+
+            }
+          },
         }));
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -461,6 +350,18 @@ const Graph = () => {
     };
     fetchData();
   }, [name]);
+
+//   document.getElementById('dropdown').addEventListener('click', e => {
+//     const dropdown = e.target.dataset.dropdown;
+//     if (dropdown) {
+//         chart.update({
+//             rangeSelector: {
+//                 dropdown
+//             }
+//         });
+//     }
+// });
+
 
   // Update tooltip formatter when name changes
   useEffect(() => {
@@ -481,6 +382,8 @@ const Graph = () => {
     }));
   }, [name]);
 
+
+
   // const handleChartUpdate = () => {
   //   const chart = chartComponentRef.current.chart;
   //   if (chart) {
@@ -489,9 +392,15 @@ const Graph = () => {
   //   }
   // };
 
+  
+
+
+
   return (
     <>
-      <div className="container" id="container">
+    
+      <div className="container" id="container" >
+
         {/* <button onClick={refreshData}>Refresh Data</button> */}
         <HighchartsReact
           ref={chartComponentRef}

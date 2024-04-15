@@ -16,10 +16,10 @@ const DefaultLayout = () => {
         <div>
             <Header />
             <div className="row">
-                <div className="col-xl-4 col-lg-5 col-md-6">
+                <div className="col-xl-4 col-lg-5 col-md-12">
                     <List />
                 </div>
-                <div className="col-xl-8 col-lg-7 col-md-6 d-none d-lg-block d-md-block">
+                <div className="col-xl-8 col-lg-7 d-none d-lg-block d-md-block">
                     <AppContent />
                 </div>
             </div>
