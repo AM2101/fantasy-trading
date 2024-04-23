@@ -20,6 +20,7 @@ const DefaultLayout = () => {
                     <List />
                 </div>
                 <div className="col-xl-8 col-lg-7 d-none d-lg-block d-md-block">
+
                     <AppContent />
                 </div>
             </div>

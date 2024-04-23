@@ -7,6 +7,7 @@
   import Logo from "../../assets/Images/logo.svg"
   import DefaultUserImg from '../../assets/Images/DefaultUserImg.svg'
   const Header = () => {
+    // const { name } = useParams();
     const userDetailsString = localStorage.getItem('userDetails');
     const userDetails = JSON.parse(userDetailsString);
     // console.log(userDetails.username);
@@ -48,6 +49,7 @@
     };
   
 
+    // console.log(name);
 
     const navItem = isLoggedIn ? [ // If user is logged in, show this set of links
     { name: "Dashboard", path: `/Trade` },

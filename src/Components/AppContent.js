@@ -7,9 +7,11 @@ import "./AppContent.css";
 
 const AppContent = () => {
   return (
-    <Suspense fallback={<div className='load'><img className="load" src={load}/></div>}>
+    <>
+    <Suspense fallback={<div className='load'><img alt='' className="load" src={load}/></div>}>
       <Routes>
         {routes.map((route, idx) => (
+
           route.element && (
             <Route  
               key={idx}
@@ -20,6 +22,22 @@ const AppContent = () => {
         ))}
       </Routes>
     </Suspense>
+{/* 
+  <Suspense fallback={<div>Loading...</div>}>
+    <Routes>
+    {routes.map((route, idx) => (
+      <Route
+        key={idx}
+        path={route.path}
+        element={<route.element />}
+        exact={route.exact}
+      />
+    ))}
+    </Routes>
+  </Suspense> */}
+
+
+    </>
   );
 };
 

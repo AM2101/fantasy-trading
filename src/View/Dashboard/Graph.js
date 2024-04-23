@@ -1,417 +1,275 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Highcharts from 'highcharts/highstock';
-import HighchartsReact from 'highcharts-react-official';
-import indicatorsAll from 'highcharts/indicators/indicators-all';
-import annotationsAdvanced from "highcharts/modules/annotations-advanced";
-import stockTools from "highcharts/modules/stock-tools";
-import "./Graph.css";
-import HighchartsFullscreen from 'highcharts/modules/full-screen';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Inject, CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator } from '@syncfusion/ej2-react-charts';
+import '../../App.css';
+import { chartData } from './Data';
 
-HighchartsFullscreen(Highcharts);
-indicatorsAll(Highcharts);
-annotationsAdvanced(Highcharts);
-stockTools(Highcharts);
+function Graph() {
+  const [seriesType, setSeriesType] = useState('Candle');
 
-// const data = await fetch(
-//   'http://localhost:8081/stockdata'
-// ).then(response => response.json());
-
-// let time ;
-
-const Graph = () => {
-  // const [cryptoData, setCryptoData] = useState([]);
-  const { name } = useParams();
-  const chartComponentRef = useRef(null);
-
-  
-  // const [xAxis, setXAxis] = useState(time);
-  const [options, setOptions] = useState({
-
-
-    // Your initial chart options
-    exporting: {
-      allowHTML: true,
-      buttons: {
-        contextButton: {
-          menuItems: [{
-            text: 'Change Type',
-            onclick: function () {
-              var chart = this;
-              var types = ['line', 'column', 'ohlc', 'candlestick']; // Add other types if needed
-              var currentType = chart.series[0].type;
-              var nextType = types[(types.indexOf(currentType) + 1) % types.length];
-              chart.series[0].update({ type: nextType });
-            }
-          }, {
-            text: 'Full Screen',
-            onclick: function () {
-              this.fullscreen.toggle();
-            }
-          }]
-        }
-      },
-      enabled: true
-    },
-    navigator: {
-      enabled: false,
-
-    },
-    //   srcollbar: {
-    //     enabled: false
-    // },
-
-    navigation: {
-      buttonOptions: {
-        align: 'left',
-        verticalAlign: 'top',
-        y: 0
-      }
-    },
-    stockTools: {
-      gui: {
-
-        enabled: true,
-        //   buttons: ['simpleShapes', 'lines', 'crookedLines', 'measure', 'advanced', 'toggleAnnotations', 'separator', 'fullScreen']
-        buttons: ['separator', 'separator', 'typeChange', 'separator', 'fullScreen'],
-        fullScreen: {
-          /**
-           * A predefined background symbol for the button.
-           *
-           * @type   {string}
-           */
-          symbol: 'fullscreen.svg'
-        },
-        definitions: {
-          typeChange: {
-
-            items: [
-              'typeOHLC',
-              'typeLine',
-              'typeCandlestick',
-              // 'typeHollowCandlestick',
-              'typeHLC',
-              // 'typeHeikinAshi'
-            ],
-          }
-        }
-      },
-
-    },
-
-
-    chart: {
-      height: (10.5 / 16 * 100) + '%',
-      //   width:'100%',
-      // height:"100%",
-      renderTo: 'container',
-      events: {
-        load: function () {
-          var chart = this,
-            series = this.series[0],
-            xAxis = chart.xAxis[0],
-            newStart = series.xData[2],
-            newEnd = series.xData[6];
-
-          xAxis.setExtremes(newStart, newEnd);
-        }
-      }
-    },
-
-    rangeSelector: {
-      dropdown:"always",
-      selected: 8,
-      allButtonsEnabled: true,
-      inputEnabled: false,
-      
-      buttons: [
-        {
-          type: 'min',
-          count: 1,
-          text: '1m',
-          title: '1 Min',
-          events: {
-            click: () => {
-              const chart = chartComponentRef.current.chart;
-              if (chart) {
-                const lastPoint = chart.xAxis[0].dataMax;
-                const newMin = lastPoint - (1 * 60 * 1000);
-
-
-                chart.update({
-                  xAxis: {
-                    min: newMin,
-                    max: lastPoint
-                  }
-                });
-              }
-
-              // time = localStorage.setItem('time',"1min")
-            }
-          }
-        },
-        {
-          type: 'min',
-          count: 1,
-          text: '5m',
-          title: '5 Min',
-          events: {
-            click: () => {
-              const chart = chartComponentRef.current.chart;
-              if (chart) {
-                const lastPoint = chart.xAxis[0].dataMax;
-                const newMin = lastPoint - (5 * 60 * 1000);
-
-                chart.update({
-                  xAxis: {
-                    min: newMin,
-                    max: lastPoint
-                  }
-                });
-              }
-              // time = localStorage.setItem('time',"5min");
-            }
-
-          }
-        },
-        {
-          type: 'hour',
-          count: 1,
-          text: '1H',
-          title: '1 Hour',
-          dataGrouping: {
-            forced: true,
-            units: [
-              [
-                'minute',
-                [1, 2, 5, 10, 15, 30]
-              ],
-              ['hour', [1]],
-              [
-                'day',
-                [1]
-              ]
-            ]
-          },
-          events: {
-            click: () => {
-              // time = localStorage.setItem('time',"1hour");
-            }
-          }
-        },
-        {
-          type: 'day',
-          count: 1,
-          text: '1D',
-          title: '1 Day',
-          dataGrouping: {
-            // forced: true,
-            // units: [['day', [1]]]
-          },
-          events: {
-            click: () => {
-              // time = localStorage.setItem('time',"1day");
-            }
-          }
-        },
-        {
-          type: 'month',
-          count: 1,
-          text: '1m',
-          title: '1 Month'
-        }, 
-        {
-          type: 'month',
-          count: 3,
-          text: '3m',
-          title: '3 Months'
-        },
-        {
-          type: 'month',
-          count: 6,
-          text: '6m',
-          title: '6 Months'
-        }, 
-        {
-          type: 'year',
-          count: 1,
-          text: '1y',
-          title: '1 Year'
-        }, 
-        {
-          type: 'all',
-          text: 'All',
-          title: 'All'
-        }]
-    },
-
-    yAxis: [
-      {
-        labels: {
-          align: "left"
-        },
-        height: "100%",
-        resize: {
-          enabled: false
-        }
-      },
-      {
-        labels: {
-          align: "left"
-        },
-        top: "80%",
-        height: "30%",
-        offset: 0
-      },
-      {
-        gridLineWidth: 1
-      }
-    ],
-   
-
-    tooltip: {
-      formatter: function () {
-        return [''].concat(
-          this.points ?
-            this.points.map(function (point) {
-              return name + `: O<span style=color:${point.color}>` + parseFloat(point.point.plotOpen).toFixed(2) + `</span> H<span style="color:${point.color}">` + parseFloat(point.point.plotHigh).toFixed(2) + `</span> L<span style="color:${point.color}">` + parseFloat(point.point.plotLow).toFixed(2) + `</span> C<span style="color:${point.color}">` + parseFloat(point.point.plotClose).toFixed(2) + '</span>';
-            }) : []
-        );
-      },
-      useHTML: true,
-      borderWidth: 0,
-      shadow: false,
-      positioner: function (width, height, point) {
-        const chart = this.chart;
-        let position;
-        if (point.isHeader) {
-          position = {
-            x: Math.max(
-              chart.plotLeft,
-              Math.min(
-                point.plotX + chart.plotLeft - width / 2,
-                chart.chartWidth - width - chart.marginRight
-              )
-            ),
-            y: point.plotY
-          };
-        } else {
-          position = {
-            x: point.series.chart.plotLeft,
-            y: point.series.yAxis.top - chart.plotTop
-          };
-        }
-        return position;
-      }
-    },
-    series: [
-      {
-        id: 'actorchart-series',
-        type: 'candlestick',
-        color: '#f23645',
-        upColor: '#089981',
-        upLineColor: '#089981',
-        lineColor: '#f23645',
-        name: "INFY",
-        showInNavigator: true,
-      }
-    ]
-  });
-
-  useEffect(() => {
-    // console.log(name);
-    const fetchData = async () => {
-
-      try {
-        const response = await fetch(`http://localhost:8081/Stockdata/${name}`);
-        const data = await response.json();
-        // console.log(data[0][0].name);
-        
-        // Update the chart options with new data
-        setOptions(prevOptions => ({
-          ...prevOptions,
-          series: [{
-            ...prevOptions.series[0],
-            data: data,
-          }],
-          title: {
-            text: `${data[0][0].name}`,
-            align:"left",
-            style:{
-              color:'#4d3a92',
-              fontSize: "1.5em",  
-
-            }
-          },
-        }));
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, [name]);
-
-//   document.getElementById('dropdown').addEventListener('click', e => {
-//     const dropdown = e.target.dataset.dropdown;
-//     if (dropdown) {
-//         chart.update({
-//             rangeSelector: {
-//                 dropdown
-//             }
-//         });
-//     }
-// });
-
-
-  // Update tooltip formatter when name changes
-  useEffect(() => {
-
-    setOptions(prevOptions => ({
-      ...prevOptions,
-      tooltip: {
-        ...prevOptions.tooltip,
-        formatter: function () {
-          return [''].concat(
-            this.points ?
-              this.points.map(function (point) {
-                return name + `: O<span style=color:${point.color}>` + parseFloat(point.point.plotOpen).toFixed(2) + `</span> H<span style="color:${point.color}">` + parseFloat(point.point.plotHigh).toFixed(2) + `</span> L<span style="color:${point.color}">` + parseFloat(point.point.plotLow).toFixed(2) + `</span> C<span style="color:${point.color}">` + parseFloat(point.point.plotClose).toFixed(2) + '</span>';
-              }) : []
-          );
-        },
-      },
-    }));
-  }, [name]);
-
-
-
-  // const handleChartUpdate = () => {
-  //   const chart = chartComponentRef.current.chart;
-  //   if (chart) {
-  //     // Save the chart options to localStorage
-  //     localStorage.setItem('chartOptions', JSON.stringify(chart.options));
-  //   }
-  // };
-
-  
-
-
-
-  return (
-    <>
-    
-      <div className="container" id="container" >
-
-        {/* <button onClick={refreshData}>Refresh Data</button> */}
-        <HighchartsReact
-          ref={chartComponentRef}
-          highcharts={Highcharts}
-          constructorType={'stockChart'}
-          options={options}
-          allowChartUpdate
-        />
-      </div>
-    </>
-  );
+  const primaryxAxis = {
+    valueType: 'DateTime',
+    majorGridLines: { width: 0 },
+    majorTickLines: { color: 'transparent' }
+};
+const primaryyAxis = {
+    labelFormat: 'n0',
+    majorTickLines: { width: 0 } 
 };
 
+  const crosshair = { enable: true };
+    const periodselector = [
+        { text: '1M', interval: 1, intervalType: 'Minutes' },
+        { text: '5M', interval: 5, intervalType: 'Minutes' },
+        { text: '1M', interval: 1, intervalType: 'Months' }, { text: 'YTD' },
+        { text: '1Y', interval: 1, intervalType: 'Years' },
+        { text: '2Y', interval: 2, intervalType: 'Years', selected: true }, { text: 'All' }
+    ];
+
+  return (
+    <div className="App">
+      <div>
+        <select value={seriesType} onChange={(e) => setSeriesType(e.target.value)}>
+          <option value="Candle">Candlestick</option>
+          <option value="Line">Line</option>
+          <option value="Spline">Spline</option>
+          <option value="RangeArea">Range Area</option>
+          <option value="HiloOpenClose">Hilo Open Close</option>
+          <option value="Hilo">Hilo</option>
+        </select>
+      </div>
+
+      <StockChartComponent id='stockcharts' primaryXAxis={primaryxAxis} primaryYAxis={primaryyAxis} crosshair={crosshair} periods={periodselector} tooltip={{enable:true}} 
+        enableSelector={true}
+        enablePeriodSelector={true} height='100%' title='Dilip Stock Price'>
+        <Inject services={[ CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator ]}/>
+        <StockChartSeriesCollectionDirective>
+          <StockChartSeriesDirective dataSource={chartData} type={seriesType} xName='x' animation={{ enable: true }}>
+            
+          </StockChartSeriesDirective>
+        </StockChartSeriesCollectionDirective>
+      </StockChartComponent>
+    </div>
+  );
+}
+
 export default Graph;
+
+
+// import { CandleSeries, Crosshair, DateTime,Inject, LineSeries, StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Tooltip } from '@syncfusion/ej2-react-charts';
+// import { EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator, Export } from '@syncfusion/ej2-react-charts';
+// import '../../App.css';
+// import { chartData } from './Data';
+// function Graph() {
+//    return (
+//     <div className="App">
+//       <StockChartComponent title='Stock Price Analysis' crosshair={{enable:true, lineType:'Both'}} 
+//         primaryXAxis={{
+//           crosshairTooltip:{enable:true}
+//         }}
+//         tooltip={{enable:true}} 
+//         enableSelector={false}
+//         // periods={[
+//         //  { text: '12H', interval: 12, intervalType: 'Hours', selected: true }
+//         // ]}
+//         enablePeriodSelector={true}>
+//       <StockChartSeriesCollectionDirective>
+//         <StockChartSeriesDirective dataSource={chartData} type='Candle' xName='x'>
+//         </StockChartSeriesDirective>
+//       </StockChartSeriesCollectionDirective>
+//       <Inject services={[ DateTime, Tooltip, Crosshair,  CandleSeries,LineSeries, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, Export, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator]}/>
+//       </StockChartComponent>
+//     </div>
+//   );
+// }
+
+// export default Graph;
+// ReactDOM.render(<App />, document.getElementById("charts"));
+// ReactDOM.render(<App />, document.getElementById("charts"));
+// ReactDOM.render(<App />, document.getElementById("charts"));
+// ReactDOM.render(<App />, document.getElementById("charts"));
+
+
+
+// import React, { useEffect, useRef, useState } from 'react';
+// import { createChart } from 'lightweight-charts';
+
+// function Graph() {
+//   const container = useRef();
+
+//   // useEffect(() => {
+//   //   // Configuration object
+//   //   const config = {
+//   //     autosize: true,
+//   //     symbol: 'AAPL',
+//   //     timezone: 'Etc/UTC',
+//   //     theme: 'light',
+//   //     style: 1,
+//   //     locale: 'en',
+//   //     enable_publishing: false,
+//   //     hide_side_toolbar: false,
+//   //     allow_symbol_change: true,
+//   //     details: true,
+//   //     hotlist: true,
+//   //     calendar: false,
+//   //     show_popup_button: true,
+//   //     popup_width: '1000',
+//   //     popup_height: '650',
+//   //     support_host: 'https://www.tradingview.com',
+//   //     toolbar_bg: '#f1f3f6',
+//   //     enabled_features: ['hide_left_toolbar_by_default', 'keep_left_toolbar_visible_on_small_screens', 'volume_force_overlay', 'side_toolbar_in_fullscreen_mode']
+//   //   };
+    
+
+//   //   // Create chart with config
+//   //   const chart = createChart(container.current, config);
+
+//   //   // Other chart setup...
+//   // }, []);
+
+
+
+//   // const [symbol, setSymbol] = useState(true);
+
+//   // Step 1: Fetch Data and Display Chart
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const res = await fetch('http://localhost:8081/stockdata/Dilip');
+//         const rawData = await res.json();
+
+//         // Format raw data
+//         const formattedData = rawData.map(item => ({
+//           time: new Date(`${item['1/25/2022']} ${item['10:50:00 AM']}`).getTime() / 1000,
+//           open: parseFloat(item['35964.4']),
+//           high: parseFloat(item['35964.4__1']),
+//           low: parseFloat(item['35908.52']),
+//           close: parseFloat(item['35922.24']),
+//           volume: parseFloat(item['31.63878']),
+//         }));
+
+//         // Sort data by time
+//         const sortedData = formattedData.sort((a, b) => a.time - b.time);
+
+//         return sortedData;
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//         return [];
+//       }
+//     };
+
+//     const displayChart = async () => {
+//       const chartProperties = {
+//         width: 900,
+//         height: 575,
+//         timeScale: {
+//           timeVisible: true,
+//           secondsVisible: true,
+//         },
+//       };
+
+//       const containerId = 'tv_chart_container';
+//       const domElement = document.getElementById(containerId);
+//       if (!domElement) return;
+
+//       const chart = createChart(domElement, chartProperties);
+//       const candleseries = chart.addCandlestickSeries();
+//       const klinedata = await fetchData();
+//       candleseries.setData(klinedata);
+//     };
+
+//     displayChart();
+//   }, []);
+
+
+//   return (
+//     <>
+    
+//     <div className="tradingview-widget-container" id="tv_chart_container" style={{ height: "100%" }} ref={container}></div>
+//     </>
+//   );
+// }
+
+// export default Graph;
+
+
+
+
+// import React, { useEffect, useRef, memo, useState } from 'react';
+
+// function Graph() {
+//   const container = useRef();
+//   const [symbol, setSymbol] = useState('');
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const res = await fetch('http://localhost:8081/stockdata/Dilip');
+//         const data = await res.json();
+//         if (data && data.length > 0) {
+//           const convertedData = data.map(item => ({
+//             date: `${item['1/25/2022']}T${item['10:50:00 AM']}`,
+//             open: parseFloat(item['35964.4']),
+//             high: parseFloat(item['35964.4__1']),
+//             low: parseFloat(item['35908.52']),
+//             close: parseFloat(item['35922.24']),
+//             volume: parseFloat(item['31.63878'])
+//           }));
+//           setSymbol(JSON.stringify(convertedData));
+//         }
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   useEffect(() => {
+//     if (!symbol) return;
+
+//     const script = document.createElement("script");
+//     script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+//     script.type = "text/javascript";
+//     script.async = true;
+//     script.innerHTML = `
+//       {
+//         "autosize": true,
+//         "datafeed": {
+//           "symbol": "${symbol}",
+//           "data": ${symbol}
+//         },
+//         "symbol": "${symbol}", // Change the symbol here if necessary
+//         "interval": "D", // Change the interval if necessary (D for daily)
+//         "container_id": "tv_chart_container",
+//         "library_path": "/charting_library/", // Change this path if necessary
+//         "locale": "en",
+//         "disabled_features": [],
+//         "enabled_features": [],
+//         "charts_storage_url": "https://saveload.tradingview.com",
+//         "charts_storage_api_version": "1.1",
+//         "client_id": "tradingview.com",
+//         "user_id": "public_user_id",
+//         "theme": "light",
+//         "timezone": "Etc/UTC",
+//         "referral_id": "2588",
+//         "overrides": {
+//           "paneProperties.background": "#131722",
+//           "paneProperties.vertGridProperties.color": "#363c4e",
+//           "paneProperties.horzGridProperties.color": "#363c4e",
+//           "symbolWatermarkProperties.transparency": 90,
+//           "scalesProperties.textColor": "#AAA",
+//           "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+//           "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f'
+//         }
+//       }`;
+//     container.current.appendChild(script);
+//   }, [symbol]);
+
+//   return (
+//     <div className="tradingview-widget-container" id="tv_chart_container" style={{height:"100%"}} ref={container}>
+//       <div className="tradingview-widget-container__widget"></div>
+//     </div>
+//   );
+// }
+
+// export default memo(Graph);
