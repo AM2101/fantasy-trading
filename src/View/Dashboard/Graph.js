@@ -1,58 +1,99 @@
-import React, { useState } from 'react';
-import { StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Inject, CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator } from '@syncfusion/ej2-react-charts';
-import '../../App.css';
-import { chartData } from './Data';
+/**
+ * Sample for Stock Chart with Multiple Series
+ */
+import * as React from "react";
+// import { useEffect } from "react";
+import { StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Inject, Crosshair, DateTime, LineSeries, SplineSeries, CandleSeries, HiloOpenCloseSeries, HiloSeries, RangeAreaSeries, Trendlines, Tooltip } from '@syncfusion/ej2-react-charts';
+import { EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator, StockLegend } from '@syncfusion/ej2-react-charts';
+// import { goog, googl } from './stock-data';
+import {chartData} from './Data.js'
+const SAMPLE_CSS = `
+    .control-fluid {
+        padding: 0px !important;
+    }
+    .charts {
+        align :center
+    }`;
 
-function Graph() {
-  const [seriesType, setSeriesType] = useState('Candle');
+const MultipleSeries = () => {
+    const load = (args) => {
+        let selectedTheme = window.location.hash.split('/')[1];
+        selectedTheme = selectedTheme ? selectedTheme : 'Material';
+        args.stockChart.theme = (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)).replace(/-dark/i, "Dark").replace(/contrast/i, 'Contrast');
+    };
+    return (<div className='control-pane'>
+            <style>{SAMPLE_CSS}</style>
+            <div className='control-section'>
+                {/* <StockChartComponent height="550vh" periods={[ { intervalType: 'Minutes', interval: 1, text: '1m' }, { intervalType: 'Minutes', interval: 30, text: '30m' }, { intervalType: 'Hours', interval: 1, text: '1H' }, { intervalType: 'Hours', interval: 12, text: '12H' }, { text: '1D', selected: true } ]} id='stockchartmultiseries' primaryXAxis={{ valueType: 'DateTime', majorGridLines: { width: 0 }, crosshairTooltip: { enable: true } }} primaryYAxis={{ interval: 40, lineStyle: { color: 'transparent' }, majorTickLines: { color: 'transparent', height: 0 }, crosshairTooltip: { enable: true } }} load={load.bind(this)} indicatorType={[]} trendlineType={[]} seriesType={['Line', 'Hilo', 'HiloOpenClose', 'Spline', 'Candle']} crosshair={{ enable: true, lineType: 'Both' }} tooltip={{enable:true}} chartArea={{ border: { width: 0 } }} title='Multiple Series' legendSettings={{ visible: true }}> */}
 
-  const primaryxAxis = {
-    valueType: 'DateTime',
-    majorGridLines: { width: 0 },
-    majorTickLines: { color: 'transparent' }
+                <StockChartComponent height="550vh" tooltip={{enable:true}} seriesType={['Line', 'Hilo', 'HiloOpenClose', 'Spline', 'Candle']} id='stockchartmultiseries' primaryXAxis={{ valueType: 'DateTime', majorGridLines: { color: 'transparent', width: 0 }, crosshairTooltip: { enable: true } }} primaryYAxis={{ lineStyle: { color: 'transparent' }, majorTickLines: { color: 'transparent', height: 0 }, crosshairTooltip: { enable: true } }} load={load.bind(this)} indicatorType={[]} exportType={[]} trendlineType={[]} title='AAPL stock price by minutes' periods={[{ intervalType: 'Minutes', interval: 1, text: '1m' }, { intervalType: 'Minutes', interval: 30, text: '30m' }, { intervalType: 'Hours', interval: 1, text: '1H' }, { intervalType: 'Hours', interval: 12, text: '12H' }, { text: '1D',intervalType: 'Day',interval: 1, selected: true }]} crosshair={{ enable: true, lineType: 'Both' }} chartArea={{ border: { width: 0 } }} >
+                    <Inject services={[DateTime, LineSeries,Tooltip, Crosshair, SplineSeries, CandleSeries, HiloOpenCloseSeries, HiloSeries, RangeAreaSeries, Trendlines, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, StockLegend, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator]}/>
+                    <StockChartSeriesCollectionDirective>
+                        <StockChartSeriesDirective dataSource={chartData} xName='x' yName='close' type='Candle' name='GOOG'/>
+                        
+                    </StockChartSeriesCollectionDirective>
+                </StockChartComponent>
+            </div>
+        </div>);
 };
-const primaryyAxis = {
-    labelFormat: 'n0',
-    majorTickLines: { width: 0 } 
-};
+export default MultipleSeries;
 
-  const crosshair = { enable: true };
-    const periodselector = [
-        { text: '1M', interval: 1, intervalType: 'Minutes' },
-        { text: '5M', interval: 5, intervalType: 'Minutes' },
-        { text: '1M', interval: 1, intervalType: 'Months' }, { text: 'YTD' },
-        { text: '1Y', interval: 1, intervalType: 'Years' },
-        { text: '2Y', interval: 2, intervalType: 'Years', selected: true }, { text: 'All' }
-    ];
 
-  return (
-    <div className="App">
-      <div>
-        <select value={seriesType} onChange={(e) => setSeriesType(e.target.value)}>
-          <option value="Candle">Candlestick</option>
-          <option value="Line">Line</option>
-          <option value="Spline">Spline</option>
-          <option value="RangeArea">Range Area</option>
-          <option value="HiloOpenClose">Hilo Open Close</option>
-          <option value="Hilo">Hilo</option>
-        </select>
-      </div>
+// import React, { useState } from 'react';
+// import { StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Inject, CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator } from '@syncfusion/ej2-react-charts';
+// import '../../App.css';
+// import { chartData } from './Data';
 
-      <StockChartComponent id='stockcharts' primaryXAxis={primaryxAxis} primaryYAxis={primaryyAxis} crosshair={crosshair} periods={periodselector} tooltip={{enable:true}} 
-        enableSelector={true}
-        enablePeriodSelector={true} height='100%' title='Dilip Stock Price'>
-        <Inject services={[ CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator ]}/>
-        <StockChartSeriesCollectionDirective>
-          <StockChartSeriesDirective dataSource={chartData} type={seriesType} xName='x' animation={{ enable: true }}>
+// function Graph() {
+//   const [seriesType, setSeriesType] = useState('Candle');
+
+//   const primaryxAxis = {
+//     valueType: 'DateTime',
+//     majorGridLines: { width: 0 },
+//     majorTickLines: { color: 'transparent' }
+// };
+// const primaryyAxis = {
+//     labelFormat: 'n0',
+//     majorTickLines: { width: 0 } 
+// };
+
+//   const crosshair = { enable: true };
+//     const periodselector = [
+//         { text: '1M', interval: 1, intervalType: 'Minutes' },
+//         { text: '5M', interval: 5, intervalType: 'Minutes' },
+//         { text: '1M', interval: 1, intervalType: 'Months' }, { text: 'YTD' },
+//         { text: '1Y', interval: 1, intervalType: 'Years' },
+//         { text: '2Y', interval: 2, intervalType: 'Years', selected: true }, { text: 'All' }
+//     ];
+
+//   return (
+//     <div className="App">
+//       <div>
+//         <select value={seriesType} onChange={(e) => setSeriesType(e.target.value)}>
+//           <option value="Candle">Candlestick</option>
+//           <option value="Line">Line</option>
+//           <option value="Spline">Spline</option>
+//           <option value="RangeArea">Range Area</option>
+//           <option value="HiloOpenClose">Hilo Open Close</option>
+//           <option value="Hilo">Hilo</option>
+//         </select>
+//       </div>
+
+//       <StockChartComponent id='stockcharts' primaryXAxis={primaryxAxis} primaryYAxis={primaryyAxis} crosshair={crosshair} periods={periodselector} tooltip={{enable:true}} 
+//         enableSelector={true}
+//         enablePeriodSelector={true} height='100%' title='Dilip Stock Price'>
+//         <Inject services={[ CandleSeries, LineSeries, SplineSeries, RangeAreaSeries, HiloOpenCloseSeries, HiloSeries, RangeTooltip, Crosshair, Tooltip, DateTime, Trendlines, Export, EmaIndicator, RsiIndicator, BollingerBands, TmaIndicator, MomentumIndicator, SmaIndicator, AtrIndicator, AccumulationDistributionIndicator, MacdIndicator, StochasticIndicator ]}/>
+//         <StockChartSeriesCollectionDirective>
+//           <StockChartSeriesDirective dataSource={chartData} type={seriesType} xName='x' animation={{ enable: true }}>
             
-          </StockChartSeriesDirective>
-        </StockChartSeriesCollectionDirective>
-      </StockChartComponent>
-    </div>
-  );
-}
+//           </StockChartSeriesDirective>
+//         </StockChartSeriesCollectionDirective>
+//       </StockChartComponent>
+//     </div>
+//   );
+// }
 
-export default Graph;
+// export default Graph;
 
 
 // import { CandleSeries, Crosshair, DateTime,Inject, LineSeries, StockChartComponent, StockChartSeriesCollectionDirective, StockChartSeriesDirective, Tooltip } from '@syncfusion/ej2-react-charts';
